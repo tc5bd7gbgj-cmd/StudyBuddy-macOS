@@ -77,7 +77,7 @@ struct TrackerView: View {
                         .font(.headline)
                     HStack {
                         Picker("Subject", selection: Binding(get: { appState.selectedSubject }, set: { appState.selectedSubject = $0 })) {
-                            ForEach(appState.subjects, id: \ .self) { subject in
+                            ForEach(appState.subjects, id: \.self) { subject in
                                 Text(subject).tag(subject)
                             }
                         }
@@ -177,7 +177,7 @@ struct FlashcardsView: View {
 
                     HStack {
                         Picker("Subject", selection: $addSubject) {
-                            ForEach(appState.subjects, id: \ .self) { Text($0) }
+                            ForEach(appState.subjects, id: \.self) { Text($0) }
                         }
                         .frame(width: 220)
 
@@ -186,13 +186,11 @@ struct FlashcardsView: View {
                     }
 
                     TextField("Front", text: $addFront, axis: .vertical)
-                        .lineLimit(3...
-                            6)
+                        .lineLimit(3, 6)
                         .textFieldStyle(.roundedBorder)
 
                     TextField("Back", text: $addBack, axis: .vertical)
-                        .lineLimit(3...
-                            6)
+                        .lineLimit(3, 6)
                         .textFieldStyle(.roundedBorder)
 
                     Button("Add card") {
@@ -212,7 +210,7 @@ struct FlashcardsView: View {
                             .font(.headline)
                         Spacer()
                         Picker("Subject", selection: Binding(get: { appState.selectedSubject }, set: { appState.selectedSubject = $0 })) {
-                            ForEach(appState.subjects, id: \ .self) { Text($0) }
+                            ForEach(appState.subjects, id: \.self) { Text($0) }
                         }
                         .frame(width: 220)
                     }
@@ -271,7 +269,7 @@ struct PapersView: View {
 
                     HStack {
                         Picker("Subject", selection: Binding(get: { appState.selectedSubject }, set: { appState.selectedSubject = $0 })) {
-                            ForEach(appState.subjects, id: \ .self) { Text($0) }
+                            ForEach(appState.subjects, id: \.self) { Text($0) }
                         }
                         .frame(width: 220)
 
@@ -305,7 +303,12 @@ struct PapersView: View {
                                     .foregroundColor(.secondary)
                             }
                             Spacer()
-                            Toggle("Done", isOn: Binding(get: { paper.done }, set: { _ in appState.updatePaperDone(paper.id, done: !$0) }))
+                            Toggle("Done", isOn: Binding(
+                                get: { paper.done },
+                                set: { newValue in
+                                    appState.updatePaperDone(paper.id, done: newValue)
+                                }
+                            ))
                         }
                         .padding(8)
                         .background(Color(NSColor.textBackgroundColor))
@@ -334,7 +337,7 @@ struct NotesView: View {
                         .font(.headline)
 
                     Picker("Subject", selection: Binding(get: { appState.selectedSubject }, set: { appState.selectedSubject = $0 })) {
-                        ForEach(appState.subjects, id: \ .self) { Text($0) }
+                        ForEach(appState.subjects, id: \.self) { Text($0) }
                     }
                     .frame(width: 240)
 
@@ -403,7 +406,7 @@ struct CalendarView: View {
 
                     HStack {
                         Picker("Subject", selection: Binding(get: { appState.selectedSubject }, set: { appState.selectedSubject = $0 })) {
-                            ForEach(appState.subjects, id: \ .self) { Text($0) }
+                            ForEach(appState.subjects, id: \.self) { Text($0) }
                         }
                         .frame(width: 220)
 
@@ -476,7 +479,7 @@ struct EssayPlannerView: View {
                         .font(.headline)
 
                     Picker("Subject", selection: $essaySubject) {
-                        ForEach(appState.subjects, id: \ .self) { Text($0) }
+                        ForEach(appState.subjects, id: \.self) { Text($0) }
                     }
                     .frame(width: 250)
 
@@ -489,7 +492,7 @@ struct EssayPlannerView: View {
                     }
 
                     TextField("Plan", text: $essayPlan, axis: .vertical)
-                        .lineLimit(4...8)
+                        .lineLimit(4, 8)
                         .textFieldStyle(.roundedBorder)
 
                     TextEditor(text: $essayBody)
