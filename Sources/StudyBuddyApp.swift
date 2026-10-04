@@ -1,5 +1,6 @@
 import SwiftUI
 import Foundation
+import Combine
 
 // MARK: - Data Models
 struct Card: Identifiable, Codable {
@@ -162,10 +163,10 @@ final class DataManager {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now) ?? now
 
         let sampleCards = [
-            Card(subject: "Maths (Edexcel)", topic: "Differentiation", front: "Differentiate x^n", back: "nx^(n-1)", due: now, box: 1),
-            Card(subject: "Maths (Edexcel)", topic: "Integration", front: "Integrate 1/x", back: "ln|x| + C", due: now, box: 2),
-            Card(subject: "Economics (Edexcel)", topic: "Elasticity", front: "PED formula", back: "% change in quantity demanded / % change in price", due: threeDaysAgo, box: 0),
-            Card(subject: "Religious Studies (OCR)", topic: "Ethics", front: "Kant's categorical imperative", back: "Universal law; humanity as an end; kingdom of ends", due: tomorrow, box: 3)
+            Card(subject: "Maths (Edexcel)", topic: "Differentiation", front: "Differentiate x^n", back: "nx^(n-1)", box: 1, due: now),
+            Card(subject: "Maths (Edexcel)", topic: "Integration", front: "Integrate 1/x", back: "ln|x| + C", box: 2, due: now),
+            Card(subject: "Economics (Edexcel)", topic: "Elasticity", front: "PED formula", back: "% change in quantity demanded / % change in price", box: 0, due: threeDaysAgo),
+            Card(subject: "Religious Studies (OCR)", topic: "Ethics", front: "Kant's categorical imperative", back: "Universal law; humanity as an end; kingdom of ends", box: 3, due: tomorrow)
         ]
 
         let sampleSessions = [
@@ -230,7 +231,7 @@ final class DataManager {
 }
 
 // MARK: - App State
-final class AppState: ObservableObject {
+final class AppState: NSObject, ObservableObject {
     @Published var data: AppData
     @Published var selectedSubject: String
 
@@ -576,7 +577,7 @@ struct FlashcardsView: View {
                                     Text("Box \(card.box)").foregroundStyle(.secondary)
                                 }
                                 Text(card.back)
-                                HStack {
+                                HStack(spacing: 8) {
                                     Button("Missed") { appState.gradeCard(card.id, rating: 0) }
                                     Button("Hard") { appState.gradeCard(card.id, rating: 1) }
                                     Button("Medium") { appState.gradeCard(card.id, rating: 2) }
